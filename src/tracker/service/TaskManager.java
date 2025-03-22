@@ -1,9 +1,9 @@
-package tasktracker.service;
+package tracker.service;
 
-import tasktracker.model.Epic;
-import tasktracker.model.StatusTask;
-import tasktracker.model.Subtask;
-import tasktracker.model.Task;
+import tracker.model.Epic;
+import tracker.model.StatusTask;
+import tracker.model.Subtask;
+import tracker.model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ public class TaskManager {
         return countId;
     }
     //>>>>>>> ЗАДАЧИ >>>>>>>>>>>>>>>>
-    //Добавляем задачу tasktracker.model.model.Task
+    //Добавляем задачу
     public void addTasks(Task taskIn) {
         tasks.put(taskIn.getIdTask(), taskIn);
     }
@@ -38,7 +38,10 @@ public class TaskManager {
         ArrayList<Task> rezult = new ArrayList<>();
         if (tasks.containsKey(id)){
             rezult.add(tasks.get(id));
-        } else System.out.println("Не найдена задача с id = " +id);
+        } else {
+            String warningText = String.format("Не найдена задача с id = %d", id);
+            System.out.println(warningText);
+        }
         return rezult;
     }
     //удаление задачи по идентификатору
@@ -52,7 +55,8 @@ public class TaskManager {
         if (isTaskExist) {
             tasks.put(taskIn.getIdTask(), taskIn);
         } else {
-            System.out.println("Задачи с id " + taskIn.getIdTask() + " не существует");
+            String warningText = String.format("Задачи с id %d не существует", taskIn.getIdTask());
+            System.out.println(warningText);
         }
     }
 
@@ -76,7 +80,10 @@ public class TaskManager {
         ArrayList<Epic> rezult = new ArrayList<>();
         if (epics.containsKey(id)){
             rezult.add(epics.get(id));
-        } else System.out.println("Не найден эпик с id = " +id);
+        } else {
+            String warningText = String.format("Не найден эпик с id = %d", id);
+            System.out.println(warningText);
+        }
         return rezult;
     }
     //удаление эпика по идентификатору
@@ -103,7 +110,8 @@ public class TaskManager {
             checkStatus(taskIn.getIdTask());
 
         } else {
-            System.out.println("Эпика с id " + taskIn.getIdTask() + " не существует");
+            String warningText = String.format("Эпика с id %d не существует", taskIn.getIdTask());
+            System.out.println(warningText);
         }
     }
 
@@ -128,7 +136,10 @@ public class TaskManager {
         ArrayList<Subtask> rezult = new ArrayList<>();
         if (subtasks.containsKey(id)){
             rezult.add(subtasks.get(id));
-        } else System.out.println("Не найдена подзадача с id = " +id);
+        } else {
+            String warningText = String.format("Не найдена подзадача с id = %d", id);
+            System.out.println(warningText);
+        }
         return rezult;
     }
     //удаление подзадачи по идентификатору
@@ -155,7 +166,8 @@ public class TaskManager {
             checkStatus(taskIn.getEpicId());
 
         } else {
-            System.out.println("Подзадачи с id " + taskIn.getIdTask() + " не существует");
+            String warningText = String.format("Подзадачи с id %d не существует", taskIn.getIdTask());
+            System.out.println(warningText);
         }
     }
 

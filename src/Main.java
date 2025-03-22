@@ -1,8 +1,8 @@
-import tasktracker.model.Epic;
-import tasktracker.model.StatusTask;
-import tasktracker.model.Subtask;
-import tasktracker.model.Task;
-import tasktracker.service.TaskManager;
+import tracker.model.Epic;
+import tracker.model.StatusTask;
+import tracker.model.Subtask;
+import tracker.model.Task;
+import tracker.service.TaskManager;
 
 public class Main {
 
