@@ -1,3 +1,9 @@
+import tasktracker.model.Epic;
+import tasktracker.model.StatusTask;
+import tasktracker.model.Subtask;
+import tasktracker.model.Task;
+import tasktracker.service.TaskManager;
+
 public class Main {
 
     public static void main(String[] args) {

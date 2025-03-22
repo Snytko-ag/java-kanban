@@ -1,3 +1,5 @@
+package tasktracker.model;
+
 public class Task {
     private final int id;
     private final String name;
@@ -25,7 +27,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "tasktracker.model.model.Task{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +

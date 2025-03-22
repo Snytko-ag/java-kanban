@@ -1,3 +1,10 @@
+package tasktracker.service;
+
+import tasktracker.model.Epic;
+import tasktracker.model.StatusTask;
+import tasktracker.model.Subtask;
+import tasktracker.model.Task;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 public class TaskManager {
@@ -13,7 +20,7 @@ public class TaskManager {
         return countId;
     }
     //>>>>>>> ЗАДАЧИ >>>>>>>>>>>>>>>>
-    //Добавляем задачу Task
+    //Добавляем задачу tasktracker.model.model.Task
     public void addTasks(Task taskIn) {
         tasks.put(taskIn.getIdTask(), taskIn);
     }
