@@ -32,7 +32,7 @@ public class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void shouldBeTasksAddedToHistory() {
+    void addingAtaskToHistory() {
         manager.searchTaskById(1);
         manager.searchEpicById(2);
         manager.searchSubtaskById(3);
