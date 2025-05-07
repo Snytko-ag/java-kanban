@@ -1,19 +1,12 @@
 package tracker.model;
 
 public class Task {
-    private /*final*/ int id;
+    private  int id;
     private final String name;
     private final String description;
     private StatusTask status;
 
-   // private int countId = 0;
-    //Генерирует уникальный ID
-    /*public int getNewId() {
-        countId++;
-        return countId;
-    }*/
-
-    public Task( String name, String description) {
+    public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.status = StatusTask.NEW;
