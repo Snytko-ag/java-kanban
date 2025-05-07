@@ -4,7 +4,7 @@ import tracker.model.Node;
 
 import java.util.*;
 
-public class InMemoryHistoryManager <T extends Task> implements HistoryManager{
+public class InMemoryHistoryManager<T extends Task> implements HistoryManager {
 
     private Node<T> head;
     private Node<T> tail;
@@ -16,7 +16,7 @@ public class InMemoryHistoryManager <T extends Task> implements HistoryManager{
 
 
     public void addHistory(T tasks) {
-        if (tasks == null){
+        if (tasks == null) {
             return;
         }
         if (historyTasks.containsKey(tasks.getIdTask())) {
@@ -60,7 +60,7 @@ public class InMemoryHistoryManager <T extends Task> implements HistoryManager{
     public List<T> getHistory() {
         List<T> history = new ArrayList<>();
         List<Node<T>> nodes = this.getTasks();
-        for (Node<T> node : nodes ){
+        for (Node<T> node : nodes) {
             history.add((T) node.getTask());
         }
 
