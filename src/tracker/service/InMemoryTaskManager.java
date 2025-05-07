@@ -120,7 +120,7 @@ public class InMemoryTaskManager implements TaskManager {
     //удаление всех подзадач, связанных с этим эпиком
 
     @Override
-    public void deleteEpicById(int id){
+    public void deleteEpicById(int id) {
         ArrayList<Integer> subtaskList = new ArrayList<>();
         for (Subtask subtask : subtasks.values()) {
             if (subtask.getEpicId() == id) {
