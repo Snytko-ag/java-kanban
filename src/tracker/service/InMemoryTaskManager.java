@@ -6,6 +6,7 @@ import tracker.model.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> tasks = new HashMap<>(); //задачи
     private final HashMap<Integer, Epic> epics = new HashMap<>(); //эпики
