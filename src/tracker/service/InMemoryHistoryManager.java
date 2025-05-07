@@ -1,9 +1,7 @@
 package tracker.service;
 import tracker.model.Task;
 import tracker.model.Node;
-
 import java.util.*;
-
 public class InMemoryHistoryManager<T extends Task> implements HistoryManager {
 
     private Node<T> head;
