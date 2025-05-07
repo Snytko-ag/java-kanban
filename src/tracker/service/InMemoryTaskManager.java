@@ -65,6 +65,7 @@ public class InMemoryTaskManager implements TaskManager {
         //удаляем задачу из истории
         historyManager.remove(id);
     }
+
     //обновление задачи
     @Override
     public void updateTask(Task taskIn) {
@@ -117,6 +118,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     //удаление эпика по идентификатору
     //удаление всех подзадач, связанных с этим эпиком
+
     @Override
     public void deleteEpicById(int id){
         ArrayList<Integer> subtaskList = new ArrayList<>();
