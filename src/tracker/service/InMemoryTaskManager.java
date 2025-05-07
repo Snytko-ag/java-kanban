@@ -40,8 +40,14 @@ public class InMemoryTaskManager implements TaskManager {
     //Удаляем все задачи
     @Override
     public void clearTasks() {
+        //удаляем все задачи из истории
+        for (Task task : tasks.values()){
+            historyManager.remove(task.getIdTask());
+        }
         tasks.clear();
+
     }
+
     //поиск по идентификатору задачи
     @Override
     public Task searchTaskById(int id){
@@ -53,6 +59,8 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTaskById(int id){
         tasks.remove(id);
+        //удаляем задачу из истории
+        historyManager.remove(id);
     }
     //обновление задачи
     @Override
@@ -83,7 +91,11 @@ public class InMemoryTaskManager implements TaskManager {
     }
     //удаляем все эпики и сразу все подзадачи
     @Override
-    public void clearEpics() { //
+    public void clearEpics() {
+        //удаляем эпики из истории
+        for (Epic epic : epics.values()){
+            historyManager.remove(epic.getIdTask());
+        }
         epics.clear();
         clearSubtasks();
     }
@@ -105,7 +117,11 @@ public class InMemoryTaskManager implements TaskManager {
                 subtaskList.add(subtask.getIdTask());
             }
         }
+        // удаляем эпики из истории
+        historyManager.remove(id);
         for (Integer i : subtaskList){
+            //удаляем подзадачи из истории
+            historyManager.remove(i);
             subtasks.remove(i);
         }
         epics.remove(id);
@@ -149,6 +165,9 @@ public class InMemoryTaskManager implements TaskManager {
     //удаляем все подзадачи
     @Override
     public void clearSubtasks() {
+        for (Subtask subtask : subtasks.values()){
+            historyManager.remove(subtask.getIdTask());
+        }
         subtasks.clear();
     }
     //поиск по идентификатору подзадачу
@@ -162,6 +181,7 @@ public class InMemoryTaskManager implements TaskManager {
     //удаление подзадачи по идентификатору
     @Override
     public void deleteSubtaskById(int id){
+        historyManager.remove(id);
         subtasks.remove(id);
     }
     //Получение списка всех подзадач определённого эпика.
