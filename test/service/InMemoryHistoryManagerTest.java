@@ -42,7 +42,7 @@ public class InMemoryHistoryManagerTest {
 
         final List<Task> history = manager.getHistory();
         assertNotNull(history, "История пустая.");
-        assertEquals(3, history.size(), "Не верное количество записей в истории");
+        assertEquals(3, history.size(), "Неверное количество записей в истории");
         assertEquals("задача1", history.get(0).getNameTask(), "Наименование не совпадает.");
         assertEquals("перезд", history.get(1).getDescriptionTask(), "Описание не совпадает.");
 
@@ -59,7 +59,7 @@ public class InMemoryHistoryManagerTest {
         manager.deleteEpicById(2);
         final List<Task> history = manager.getHistory();
 
-        assertEquals(1, history.size(), "Не верное количество записей в истории");
+        assertEquals(1, history.size(), "Неверное количество записей в истории");
     }
 
     @Test
@@ -74,7 +74,7 @@ public class InMemoryHistoryManagerTest {
         manager.clearSubtasks();
         final List<Task> history = manager.getHistory();
 
-        assertEquals(0, history.size(), "Не верное количество записей в истории");
+        assertEquals(0, history.size(), "Неверное количество записей в истории");
     }
 
 
