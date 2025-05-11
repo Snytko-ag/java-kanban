@@ -1,9 +1,6 @@
 import tracker.model.Epic;
-import tracker.model.StatusTask;
 import tracker.model.Subtask;
 import tracker.model.Task;
-import tracker.service.InMemoryHistoryManager;
-import tracker.service.InMemoryTaskManager;
 import tracker.service.Managers;
 import tracker.service.TaskManager;
 
@@ -40,20 +37,29 @@ public class Main {
         manager.addSubtask(subtask2);
         manager.addSubtask(subtask3);
         manager.addSubtask(subtask4);
-
+/*
         System.out.println("<<<<<<<Получение списка всех задач>>>>>>>");
         System.out.println(manager.getTasks());
         System.out.println(manager.getEpics());
         System.out.println(manager.getSubtask());
-
+*/
         System.out.println("<<<<<<<Получение по идентификатору>>>>>>>");
         System.out.println(manager.searchTaskById(task1.getIdTask()));
+        System.out.println(manager.searchTaskById(task2.getIdTask()));
+        System.out.println(manager.searchEpicById(epic1.getIdTask()));
         System.out.println(manager.searchEpicById(epic2.getIdTask()));
+        System.out.println(manager.searchSubtaskById(subtask1.getIdTask()));
+        System.out.println(manager.searchSubtaskById(subtask2.getIdTask()));
         System.out.println(manager.searchSubtaskById(subtask3.getIdTask()));
+        System.out.println(manager.searchSubtaskById(subtask4.getIdTask()));
 
+
+/*
         System.out.println("<<<<<<<Получение списка всех подзадач определённого эпика>>>>>>>");
         System.out.println(manager.getSubtaskByEpic(epic2.getIdTask()));
 
+ */
+/*
         System.out.println("<<<<<<<Обновление. Новая версия объекта с верным идентификатором передаётся в виде параметра>>>>>>>");
         //Task task3 = new Task(task2.getIdTask(), "задача2", "собрать книги",  StatusTask.DONE);
         //manager.updateTask(task3);
@@ -101,9 +107,17 @@ public class Main {
         System.out.println(manager.getTasks());
         System.out.println(manager.getEpics());
         System.out.println(manager.getSubtask());
-
+*/
+        System.out.println("history = " + manager.getHistory());
         System.out.println("history = " + manager.getHistory());
 
+
+        manager.deleteTaskById(task1.getIdTask());
+        manager.deleteEpicById(epic1.getIdTask());
+        manager.deleteEpicById(epic2.getIdTask());
+        manager.deleteSubtaskById(subtask3.getIdTask());
+
+        System.out.println("history = " + manager.getHistory());
     }
 }
 
