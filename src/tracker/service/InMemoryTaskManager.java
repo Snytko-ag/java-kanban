@@ -17,7 +17,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     private int countId = 0;
 
-    public  InMemoryTaskManager () {
+    public  InMemoryTaskManager() {
         this.tasks = new HashMap<>();
         this.epics = new HashMap<>();
         this.subtasks = new HashMap<>();
