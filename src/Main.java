@@ -131,8 +131,10 @@ public class Main {
             System.out.println("чтение из файла: " +task);
         }
 
-        System.out.println("id = " +manager1.searchTaskById(1).getTypeTask());
+        System.out.println("id = " + manager1.searchTaskById(1).getTypeTask());
+
         System.out.println(manager1.getEpics());
+
         System.out.println(manager1.getSubtask());
 
 
