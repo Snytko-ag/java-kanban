@@ -11,7 +11,6 @@ import tracker.model.Subtask;
 import tracker.model.Task;
 
 import java.io.IOException;
-import java.io.FileNotFoundException;
 import tracker.model.*;
 
 
@@ -19,13 +18,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     protected Path path;
 
-    public FileBackedTasksManager ( Path path) {
+    public FileBackedTasksManager(Path path) {
         super();
         this.path = path;
     }
 
     private void save()  {
-        try (FileWriter fileWriter = new FileWriter(path.toString())){
+        try (FileWriter fileWriter = new FileWriter(path.toString())) {
             fileWriter.write("id,type,name,status,description,epic\n");
             List<Task> fileTask = new ArrayList<>();
             fileTask.addAll(getTasks());
@@ -43,7 +42,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     public static FileBackedTasksManager  loadFromFile(Path path)  {
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(Paths.get(path.toString()));
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(path.getFileName().toString()))) {
-            while (bufferedReader.ready()){
+            while (bufferedReader.ready()) {
                 String line = bufferedReader.readLine();
                 if (line.startsWith("id") || line.isEmpty()) {
                     continue;
@@ -69,7 +68,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return fileBackedTasksManager;
     }
 
-    private  String toString(Task task){
+    private  String toString(Task task) {
 
         String epicId = " ";
 
