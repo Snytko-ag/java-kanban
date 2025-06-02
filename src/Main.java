@@ -128,7 +128,7 @@ public class Main {
         TaskManager manager1 = FileBackedTasksManager.loadFromFile(Paths.get("test.csv"));
 
         for (Task task : manager1.getTasks()) {
-            System.out.println("чтение из файла: " +task);
+            System.out.println("чтение из файла: " + task);
         }
 
         System.out.println("id = " + manager1.searchTaskById(1).getTypeTask());
