@@ -1,5 +1,7 @@
 package tracker.model;
 
+import java.util.Objects;
+
 public class Task {
     private  int id;
     private final String name;
@@ -25,6 +27,8 @@ public class Task {
         this.status = status;
     }
 
+
+
     public int getIdTask() {
         return id;
     }
@@ -45,10 +49,12 @@ public class Task {
         return description;
     }
 
-
-
     public void setStatusTask(StatusTask status) {
         this.status = status;
+    }
+
+    public TypeTask getTypeTask() {
+        return TypeTask.TASK;
     }
 
     @Override
@@ -59,5 +65,17 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", status=" + status +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return id == task.id && Objects.equals(name, task.name) && Objects.equals(description, task.description) && status == task.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, status);
     }
 }
