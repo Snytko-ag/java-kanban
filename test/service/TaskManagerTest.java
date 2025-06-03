@@ -8,6 +8,8 @@ import tracker.service.TaskManager;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +18,7 @@ class TaskManagerTest {
     protected TaskManager manager = Managers.getDefault();
 
     @BeforeEach
-    void beforeEach() {
+    void beforeEach() throws IOException {
         Task task1 = new Task("задача1", "собрать коробки");
         Task task2 = new Task("задача2", "собрать книги");
         Epic epic1 = new Epic("epic1", "перезд");

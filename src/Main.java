@@ -1,16 +1,21 @@
 import tracker.model.Epic;
+import tracker.model.StatusTask;
 import tracker.model.Subtask;
 import tracker.model.Task;
-import tracker.service.Managers;
-import tracker.service.TaskManager;
+import tracker.service.FileBackedTasksManager;
+
+import tracker.service.*;
+
+
+import java.nio.file.Paths;
 
 public class Main {
 
     public static void main(String[] args) {
 
 
-        TaskManager manager = Managers.getDefault();
-
+        //TaskManager manager = Managers.getDefault();
+        TaskManager manager = new FileBackedTasksManager(Paths.get("test.csv"));
 
 
         Task task1 = new Task("задача1", "собрать коробки");
@@ -37,12 +42,12 @@ public class Main {
         manager.addSubtask(subtask2);
         manager.addSubtask(subtask3);
         manager.addSubtask(subtask4);
-/*
+
         System.out.println("<<<<<<<Получение списка всех задач>>>>>>>");
-        System.out.println(manager.getTasks());
+ /*       System.out.println(manager.getTasks());
         System.out.println(manager.getEpics());
         System.out.println(manager.getSubtask());
-*/
+
         System.out.println("<<<<<<<Получение по идентификатору>>>>>>>");
         System.out.println(manager.searchTaskById(task1.getIdTask()));
         System.out.println(manager.searchTaskById(task2.getIdTask()));
@@ -52,6 +57,7 @@ public class Main {
         System.out.println(manager.searchSubtaskById(subtask2.getIdTask()));
         System.out.println(manager.searchSubtaskById(subtask3.getIdTask()));
         System.out.println(manager.searchSubtaskById(subtask4.getIdTask()));
+*/
 
 
 /*
@@ -59,7 +65,7 @@ public class Main {
         System.out.println(manager.getSubtaskByEpic(epic2.getIdTask()));
 
  */
-/*
+
         System.out.println("<<<<<<<Обновление. Новая версия объекта с верным идентификатором передаётся в виде параметра>>>>>>>");
         //Task task3 = new Task(task2.getIdTask(), "задача2", "собрать книги",  StatusTask.DONE);
         //manager.updateTask(task3);
@@ -75,7 +81,7 @@ public class Main {
         //System.out.println(manager.searchSubtaskById(subtask4.getIdTask()));
         System.out.println(manager.searchEpicById(subtask6.getEpicId()));
 
-
+/*
         System.out.println("<<<<<<<Удаление по идентификатору>>>>>>>");
         //проверяем что task1 есть
         System.out.println(manager.searchTaskById(task1.getIdTask()));
@@ -108,16 +114,30 @@ public class Main {
         System.out.println(manager.getEpics());
         System.out.println(manager.getSubtask());
 */
-        System.out.println("history = " + manager.getHistory());
-        System.out.println("history = " + manager.getHistory());
+        //System.out.println("history = " + manager.getHistory());
+        //System.out.println("history = " + manager.getHistory());
 
 
-        manager.deleteTaskById(task1.getIdTask());
-        manager.deleteEpicById(epic1.getIdTask());
-        manager.deleteEpicById(epic2.getIdTask());
-        manager.deleteSubtaskById(subtask3.getIdTask());
+        //manager.deleteTaskById(task1.getIdTask());
+       // manager.deleteEpicById(epic1.getIdTask());
+       // manager.deleteEpicById(epic2.getIdTask());
+        //manager.deleteSubtaskById(subtask3.getIdTask());
 
-        System.out.println("history = " + manager.getHistory());
+        //System.out.println("history = " + manager.getHistory());
+
+        TaskManager manager1 = FileBackedTasksManager.loadFromFile(Paths.get("test.csv"));
+
+        for (Task task : manager1.getTasks()) {
+            System.out.println("чтение из файла: " + task);
+        }
+
+        System.out.println("id = " + manager1.searchTaskById(1).getTypeTask());
+
+        System.out.println(manager1.getEpics());
+
+        System.out.println(manager1.getSubtask());
+
+
     }
 }
 

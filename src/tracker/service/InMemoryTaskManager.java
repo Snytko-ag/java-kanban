@@ -8,13 +8,25 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final HashMap<Integer, Task> tasks = new HashMap<>(); //задачи
-    private final HashMap<Integer, Epic> epics = new HashMap<>(); //эпики
-    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    private final HashMap<Integer, Task> tasks;// = new HashMap<>(); //задачи
+    private final HashMap<Integer, Epic> epics;// = new HashMap<>(); //эпики
+    private final HashMap<Integer, Subtask> subtasks;// = new HashMap<>();
+    //private final TaskManager taskManager;
 
     private final InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 
     private int countId = 0;
+
+    public  InMemoryTaskManager() {
+        this.tasks = new HashMap<>();
+        this.epics = new HashMap<>();
+        this.subtasks = new HashMap<>();
+        //this.historyManager = historyManager;
+    }
+
+
+
+
 
     //Генерирует уникальный ID
     public int getNewId() {
