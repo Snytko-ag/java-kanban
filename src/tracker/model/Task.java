@@ -95,7 +95,7 @@ public class Task {
         return duration;
     }
 
-    public void setDuration(Duration duration){
+    public void setDuration(Duration duration) {
         this.duration = duration;
     }
 
