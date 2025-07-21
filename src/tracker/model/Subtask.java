@@ -10,6 +10,7 @@ public class Subtask extends Task {
         super(name, description);
         this.epicId = epicId;
     }
+
     public Subtask(String name, String description, int epicId, LocalDateTime dateStart, Duration duration) {
         super(name, description, dateStart, duration);
         this.epicId = epicId;
@@ -43,9 +44,8 @@ public class Subtask extends Task {
     public String toString() {
         return "Subtask{" +
                 "dataStart=" + getDateStart() +
-                ", duration=" + getDuration()+
+                ", duration=" + getDuration() +
                 ", epicId=" + epicId +
-
                 "} " + super.toString();
     }
 }
