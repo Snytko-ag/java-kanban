@@ -1,5 +1,4 @@
 package tracker.service;
-import tracker.exception.ManagerSaveException;
 import tracker.exception.TaskConflictException;
 import tracker.model.*;
 
@@ -256,7 +255,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void checkStatus (int epicId) {
+    public void checkStatus(int epicId) {
         List<Subtask> subtasksList = getSubtaskByEpic(epicId);
 
         boolean allNew = subtasksList.stream()
@@ -317,7 +316,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public void addToTreeSet(Task task) {
-        if(task.getDateStart() != null) {
+        if (task.getDateStart() != null) {
             treeSet.add(task);
         }
     }
