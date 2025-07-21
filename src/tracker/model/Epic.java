@@ -15,11 +15,11 @@ public class Epic  extends Task {
         super(id, name, description, status);
     }
 
-    public void setDateEnd (LocalDateTime dateEnd){
+    public void setDateEnd(LocalDateTime dateEnd) {
         this.dateEnd = dateEnd;
     }
 
-    public LocalDateTime getDateEnd(){
+    public LocalDateTime getDateEnd() {
         return dateEnd;
     }
 
@@ -28,12 +28,12 @@ public class Epic  extends Task {
         return TypeTask.EPIC;
     }
 
-    public String toString(){
+    public String toString() {
        return
         "Epic{" +
             "dataStart=" + getDateStart() +
             ", dateEnd=" + getDateEnd() +
-            ", duration=" + getDuration()+
+            ", duration=" + getDuration() +
             "} " + super.toString();
     }
 
