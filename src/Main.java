@@ -1,5 +1,4 @@
 import tracker.model.Epic;
-import tracker.model.StatusTask;
 import tracker.model.Subtask;
 import tracker.model.Task;
 import tracker.service.FileBackedTasksManager;
