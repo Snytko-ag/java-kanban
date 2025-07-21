@@ -1,15 +1,21 @@
 package service;
 
+import tracker.exception.TaskConflictException;
 import tracker.model.Epic;
+import tracker.model.StatusTask;
 import tracker.model.Subtask;
 import tracker.model.Task;
 import tracker.service.Managers;
 import tracker.service.TaskManager;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import static tracker.model.Task.dateTimeFormatter;
+
 import org.junit.jupiter.api.BeforeEach;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,22 +25,22 @@ class TaskManagerTest {
 
     @BeforeEach
     void beforeEach() throws IOException {
-        Task task1 = new Task("задача1", "собрать коробки");
-        Task task2 = new Task("задача2", "собрать книги");
+        Task task1 = new Task("задача1", "собрать коробки", LocalDateTime.parse("20.07.2025 00:00", dateTimeFormatter), Duration.ofMinutes(100L));
+        Task task2 = new Task("задача2", "собрать книги", LocalDateTime.parse("20.07.2026 00:00", dateTimeFormatter), Duration.ofMinutes(100L));
         Epic epic1 = new Epic("epic1", "перезд");
         Epic epic2 = new Epic("epic2", "регистрация");
-        manager.addTasks(task1);
-        manager.addTasks(task2);
-        manager.addEpics(epic1);
-        manager.addEpics(epic2);
-        Subtask subtask1 = new Subtask("подзадача1", "собрать вещи", epic1.getIdTask());
-        Subtask subtask2 = new Subtask("подзадача2", "погрузить вещи", epic1.getIdTask());
-        Subtask subtask3 = new Subtask("подзадача3", "найти документы", epic2.getIdTask());
+        manager.addTasks(task1);//1
+        manager.addTasks(task2);//2
+        manager.addEpics(epic1);//3
+        manager.addEpics(epic2);//4
+        Subtask subtask1 = new Subtask("подзадача1", "собрать вещи", epic1.getIdTask(),LocalDateTime.parse("21.07.2025 00:00", dateTimeFormatter), Duration.ofMinutes(10L));
+        Subtask subtask2 = new Subtask("подзадача2", "погрузить вещи", epic1.getIdTask(),LocalDateTime.parse("22.07.2025 00:00", dateTimeFormatter), Duration.ofMinutes(10L));
+        Subtask subtask3 = new Subtask("подзадача3", "найти документы", epic2.getIdTask(),LocalDateTime.parse("23.07.2025 00:00", dateTimeFormatter), Duration.ofMinutes(10L));
         Subtask subtask4 = new Subtask("подзадача4", "сходить в паспортный стол", epic2.getIdTask());
-        manager.addSubtask(subtask1);
-        manager.addSubtask(subtask2);
-        manager.addSubtask(subtask3);
-        manager.addSubtask(subtask4);
+        manager.addSubtask(subtask1);//5
+        manager.addSubtask(subtask2);//6
+        manager.addSubtask(subtask3);//7
+        manager.addSubtask(subtask4);//8
     }
 
     @Test
@@ -130,6 +136,39 @@ class TaskManagerTest {
         assertEquals(0, manager.getSubtask().size());
     }
 
+    @Test
+    void shouldUpdateEpicToStatusIN_PROGRESS(){
+        Epic epic = manager.searchEpicById(3);
+        Subtask subtask = manager.searchSubtaskById(5);
+        assertSame(StatusTask.NEW, epic.getStatusTask());
+        subtask.setStatusTask(StatusTask.IN_PROGRESS);
+        manager.updateSubtask(subtask);
+        assertSame(StatusTask.IN_PROGRESS, epic.getStatusTask());
+    }
 
+    @Test
+    void shouldUpdateEpicToStatusIN_DONE(){
+        Epic epic = manager.searchEpicById(3);
+        assertSame(StatusTask.NEW, epic.getStatusTask());
+        manager.getSubtaskByEpic(epic.getIdTask())
+                .forEach(subtask -> {
+                    subtask.setStatusTask(StatusTask.DONE);
+                    manager.updateSubtask(subtask);
+                });
 
+        assertSame(StatusTask.DONE, epic.getStatusTask());
+    }
+
+    @Test
+    public void shouldNotCrossTime() {
+        Task task = manager.searchTaskById(1);
+        assertThrows(TaskConflictException.class, () -> {
+            task.setDateStart(LocalDateTime.parse("20.07.2026 00:00", Task.dateTimeFormatter));
+            manager.updateTask(task);
+        });
+        assertDoesNotThrow(() -> {
+            task.setDateStart(LocalDateTime.parse("22.07.2026 00:00", Task.dateTimeFormatter));
+            manager.updateTask(task);
+        });
+    }
 }
