@@ -1,5 +1,8 @@
 package tracker.model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
@@ -7,6 +10,10 @@ public class Task {
     private final String name;
     private final String description;
     private StatusTask status;
+    private Duration duration;
+    private LocalDateTime dateStart;
+    private LocalDateTime dateEnd;
+    public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     public Task(String name, String description) {
         this.name = name;
@@ -14,10 +21,20 @@ public class Task {
         this.status = StatusTask.NEW;
     }
 
-    public Task(int id, String name, String description) {
+    public Task(String name, String description, LocalDateTime dateStart, Duration duration) {
+        this.name = name;
+        this.description = description;
+        this.status = StatusTask.NEW;
+        this.dateStart = dateStart;
+        this.duration = duration;
+    }
+
+    public Task(int id, String name, String description, LocalDateTime dateStart, Duration duration) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.dateStart = dateStart;
+        this.duration = duration;
     }
 
     public Task(int id, String name, String description, StatusTask status) {
@@ -25,6 +42,15 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = status;
+    }
+
+    public Task(int id, String name, String description, StatusTask status, LocalDateTime dateStart, Duration duration) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.dateStart = dateStart;
+        this.duration = duration;
     }
 
 
@@ -57,13 +83,42 @@ public class Task {
         return TypeTask.TASK;
     }
 
+    public LocalDateTime getDateStart() {
+        return dateStart;
+    }
+
+    public void setDateStart(LocalDateTime dateStart) {
+        this.dateStart = dateStart;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getDateEnd() {
+
+        if (dateStart != null && duration != null) {
+            return dateStart.plus(duration);
+        } else return  null;
+    }
+
+    public static <T extends Task> int compareTime(T a, T b) {
+        return a.getDateStart().isBefore(b.getDateStart()) ? -1 : 1;
+    }
+
     @Override
     public String toString() {
-        return "tasktracker.model.model.Task{" +
+        return "Task{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", status=" + status +
+                ", dateStart=" + dateStart +
+                ", duration=" + duration +
                 '}';
     }
 

@@ -1,5 +1,8 @@
 package tracker.model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Subtask extends Task {
     private int epicId;
 
@@ -8,13 +11,23 @@ public class Subtask extends Task {
         this.epicId = epicId;
     }
 
-    public Subtask(int id,  String name, String description, int epicId) {
-        super(id, name, description);
+    public Subtask(String name, String description, int epicId, LocalDateTime dateStart, Duration duration) {
+        super(name, description, dateStart, duration);
+        this.epicId = epicId;
+    }
+
+    public Subtask(int id,  String name, String description, int epicId, LocalDateTime dateStart, Duration duration) {
+        super(id, name, description, dateStart, duration);
         this.epicId = epicId;
     }
 
     public Subtask(int id, String name, String description, StatusTask status, int epicId) {
         super(id, name, description, status);
+        this.epicId = epicId;
+    }
+
+    public Subtask(int id, String name, String description, StatusTask status, LocalDateTime dateStart, Duration duration, int epicId) {
+        super(id, name, description, status, dateStart, duration);
         this.epicId = epicId;
     }
 
@@ -29,8 +42,10 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "tasktracker.model.model.Subtask{" +
-                "epicId=" + epicId +
+        return "Subtask{" +
+                "dataStart=" + getDateStart() +
+                ", duration=" + getDuration() +
+                ", epicId=" + epicId +
                 "} " + super.toString();
     }
 }

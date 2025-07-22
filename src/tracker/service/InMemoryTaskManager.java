@@ -1,11 +1,11 @@
 package tracker.service;
-import tracker.model.Epic;
-import tracker.model.StatusTask;
-import tracker.model.Subtask;
-import tracker.model.Task;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import tracker.exception.TaskConflictException;
+import tracker.model.*;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> tasks;// = new HashMap<>(); //задачи
@@ -17,16 +17,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     private int countId = 0;
 
+    private Set<Task> treeSet = new TreeSet<>(Task::compareTime);
+
     public  InMemoryTaskManager() {
         this.tasks = new HashMap<>();
         this.epics = new HashMap<>();
         this.subtasks = new HashMap<>();
         //this.historyManager = historyManager;
     }
-
-
-
-
 
     //Генерирует уникальный ID
     public int getNewId() {
@@ -38,9 +36,12 @@ public class InMemoryTaskManager implements TaskManager {
     //Добавляем задачу
     @Override
     public void addTasks(Task taskIn) {
+        checkCrossedTime(taskIn);
         taskIn.setIdTask(getNewId());
         int id = taskIn.getIdTask();
         tasks.put(id, taskIn);
+
+        addToTreeSet(taskIn);
     }
 
     //вывод списка задач
@@ -53,11 +54,13 @@ public class InMemoryTaskManager implements TaskManager {
     //Удаляем все задачи
     @Override
     public void clearTasks() {
-        //удаляем все задачи из истории
-        for (Task task : tasks.values()) {
-            historyManager.remove(task.getIdTask());
-        }
+        // Удаляем все задачи из истории
+        tasks.values().stream()
+                .forEach(task -> historyManager.remove(task.getIdTask()));
+
+        // Очищаем коллекцию задач
         tasks.clear();
+        removeTypeFromTreeSet(TypeTask.TASK);
     }
 
     //поиск по идентификатору задачи
@@ -71,9 +74,11 @@ public class InMemoryTaskManager implements TaskManager {
     //удаление задачи по идентификатору
     @Override
     public void deleteTaskById(int id) {
+        Task removedTask = tasks.get(id);
         tasks.remove(id);
         //удаляем задачу из истории
         historyManager.remove(id);
+        removeFromTreeSet(removedTask);
     }
 
     //обновление задачи
@@ -83,6 +88,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         if (isTaskExist) {
             tasks.put(taskIn.getIdTask(), taskIn);
+            checkCrossedTime(taskIn);
         } else {
             String warningText = String.format("Задачи с id %d не существует", taskIn.getIdTask());
             System.out.println(warningText);
@@ -110,11 +116,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void clearEpics() {
         //удаляем эпики из истории
-        for (Epic epic : epics.values()) {
-            historyManager.remove(epic.getIdTask());
-        }
+        epics.values().forEach(epic ->  historyManager.remove(epic.getIdTask()));
         epics.clear();
         clearSubtasks();
+        removeTypeFromTreeSet(TypeTask.SUBTASK);
     }
 
     //поиск по идентификатору эпика
@@ -131,20 +136,22 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteEpicById(int id) {
-        ArrayList<Integer> subtaskList = new ArrayList<>();
-        for (Subtask subtask : subtasks.values()) {
-            if (subtask.getEpicId() == id) {
-                subtaskList.add(subtask.getIdTask());
-            }
-        }
+        // Получаем идентификаторы подзадач, связанных с данным эпиком
+        List<Integer> subtaskIdsToRemove = subtasks.values().stream()
+                .filter(subtask -> subtask.getEpicId() == id)
+                .map(Subtask::getIdTask)
+                .collect(Collectors.toList());
 
-        // удаляем эпики из истории
+        // Удаляем эпик из истории
         historyManager.remove(id);
-        for (Integer i : subtaskList) {
-            //удаляем подзадачи из истории
-            historyManager.remove(i);
-            subtasks.remove(i);
-        }
+
+        // Удаляем каждую подзадачу и её историю
+        subtaskIdsToRemove.forEach(subtaskId -> {
+            historyManager.remove(subtaskId);
+            subtasks.remove(subtaskId);
+        });
+
+        // Удаляем сам эпик
         epics.remove(id);
     }
 
@@ -173,10 +180,17 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println("Передан пустой или не существующий Эпик");
             return;
         }
+        if (taskIn.getDateStart() != null && taskIn.getDateEnd() != null) {
+            checkCrossedTime(taskIn);
+        }
         taskIn.setIdTask(getNewId());
         int id = taskIn.getIdTask();
         subtasks.put(id, taskIn);
         checkStatus(taskIn.getEpicId());
+
+        if (taskIn.getDateStart() != null && taskIn.getDateEnd() != null) {
+            addToTreeSet(taskIn);
+        }
     }
 
     //вывод списка подзадач
@@ -189,10 +203,9 @@ public class InMemoryTaskManager implements TaskManager {
     //удаляем все подзадачи
     @Override
     public void clearSubtasks() {
-        for (Subtask subtask : subtasks.values()) {
-            historyManager.remove(subtask.getIdTask());
-        }
+        subtasks.values().forEach(subtask -> historyManager.remove(subtask.getIdTask()));
         subtasks.clear();
+        removeTypeFromTreeSet(TypeTask.SUBTASK);
     }
 
     //поиск по идентификатору подзадачу
@@ -207,20 +220,21 @@ public class InMemoryTaskManager implements TaskManager {
     //удаление подзадачи по идентификатору
     @Override
     public void deleteSubtaskById(int id) {
+        Subtask subtask = searchSubtaskById(id);
         historyManager.remove(id);
         subtasks.remove(id);
+        removeFromTreeSet(subtask);
     }
 
     //Получение списка всех подзадач определённого эпика.
     @Override
     public ArrayList<Subtask> getSubtaskByEpic(int epicId) {
-        ArrayList<Subtask> subtaskList = new ArrayList<>();
-        for (Subtask subtask : subtasks.values()) {
-            if (subtask.getEpicId() == epicId) {
-                subtaskList.add(subtasks.get(subtask.getIdTask()));
-            }
-        }
-        return subtaskList;
+
+        List<Subtask> subtaskList = subtasks.values().stream()
+                .filter(subtask -> subtask.getEpicId() == epicId)
+                .map(subtask -> subtasks.get(subtask.getIdTask()))
+                .collect(Collectors.toList());
+        return (ArrayList<Subtask>) subtaskList;
     }
 
     //обновление подзадачи
@@ -233,6 +247,7 @@ public class InMemoryTaskManager implements TaskManager {
             //если вдруг решили изменить статус
             checkStatus(taskIn.getEpicId());
 
+
         } else {
             String warningText = String.format("Подзадачи с id %d не существует", taskIn.getIdTask());
             System.out.println(warningText);
@@ -241,24 +256,52 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void checkStatus(int epicId) {
-        ArrayList<Subtask> subtasksList = getSubtaskByEpic(epicId);
+        List<Subtask> subtasksList = getSubtaskByEpic(epicId);
 
-        int countDone = 0;
-        int countNew = 0;
-        for (Subtask i : subtasksList) {
-            if (i.getStatusTask() == StatusTask.NEW) {
-                countNew++;
-            } else if (i.getStatusTask() == StatusTask.DONE) {
-                countDone++;
-            }
-        }
+        boolean allNew = subtasksList.stream()
+                .allMatch(subtask -> subtask.getStatusTask() == StatusTask.NEW);
+        boolean allDone = subtasksList.stream()
+                .allMatch(subtask -> subtask.getStatusTask() == StatusTask.DONE);
 
-        if (countDone == subtasksList.size()) {
-            epics.get(epicId).setStatusTask(StatusTask.DONE);
-        } else if (countNew == subtasksList.size()) {
+        if (allNew) {
             epics.get(epicId).setStatusTask(StatusTask.NEW);
+        } else if (allDone) {
+            epics.get(epicId).setStatusTask(StatusTask.DONE);
         } else {
             epics.get(epicId).setStatusTask(StatusTask.IN_PROGRESS);
+        }
+
+        setDateEpic(epicId);
+    }
+
+    protected void setDateEpic(int epicId) {
+        List<Subtask> subtasksList = getSubtaskByEpic(epicId);
+
+        LocalDateTime dateStart = subtasksList.stream()
+                .map(Task::getDateStart)
+                .filter(Objects::nonNull)
+                .min(LocalDateTime::compareTo)
+                .orElse(null);
+
+        LocalDateTime dateEnd = subtasksList.stream()
+                .map(Task::getDateEnd)
+                .filter(Objects::nonNull)
+                .max(LocalDateTime::compareTo)
+                .orElse(null);
+
+        Duration duration = subtasksList.stream()
+                .map(Task::getDuration)
+                .filter(Objects::nonNull)
+                .reduce(Duration.ZERO, Duration::plus);
+
+        if (dateStart != null) {
+            epics.get(epicId).setDateStart(dateStart);
+        }
+        if (dateEnd != null) {
+            epics.get(epicId).setDateEnd(dateEnd);
+        }
+        if (!duration.isZero()) {
+            epics.get(epicId).setDuration(duration);
         }
     }
 
@@ -267,5 +310,56 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
+    @Override
+    public List<Task> getPrioritizedTasks() {
+        return new ArrayList<>(treeSet);
+    }
 
+    public void addToTreeSet(Task task) {
+        if (task.getDateStart() != null) {
+            treeSet.add(task);
+        }
+    }
+
+    public <T extends Task> void updateTreeSet(T task) {
+        if (task == null) {
+            return;
+        }
+
+        Task oldTask = (task.getTypeTask() == TypeTask.TASK ? tasks : subtasks).get(task.getIdTask());
+        removeFromTreeSet(oldTask);
+        addToTreeSet(task);
+    }
+
+    protected List<Task> removeTypeFromTreeSet(TypeTask taskType) {
+        return treeSet.stream().filter(task -> task.getTypeTask() != taskType).toList();
+    }
+
+    public <T extends Task> void removeFromTreeSet(T task) {
+        treeSet.remove(task);
+    }
+
+    public <T extends Task> void checkCrossedTime(T task) {
+        LocalDateTime startTime = task.getDateStart();
+        LocalDateTime endTime = task.getDateEnd();
+
+        if (startTime == null || endTime == null) {
+            //throw new ManagerSaveException("Эта задача не участвует в планировании");
+            return;
+        }
+
+        boolean isCrossed = treeSet.stream()
+                .filter(treeTask -> treeTask.getIdTask()  != task.getIdTask())
+                .anyMatch(treeTask -> {
+                            LocalDateTime treeTaskStart = treeTask.getDateStart();
+                            LocalDateTime treeTaskEnd = treeTask.getDateEnd();
+                            if (treeTaskEnd.isAfter(startTime) && treeTaskEnd.isBefore(endTime)) {
+                                return true;
+                            }
+                    return (treeTaskStart.isAfter(startTime) || treeTaskStart.isEqual(startTime)) && !treeTaskStart.isAfter(endTime);
+                });
+        if (isCrossed) {
+            throw new TaskConflictException("В эти даты уже запланирована другая задача");
+        }
+    }
 }
