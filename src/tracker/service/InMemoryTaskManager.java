@@ -8,10 +8,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final HashMap<Integer, Task> tasks;// = new HashMap<>(); //задачи
-    private final HashMap<Integer, Epic> epics;// = new HashMap<>(); //эпики
-    private final HashMap<Integer, Subtask> subtasks;// = new HashMap<>();
-    //private final TaskManager taskManager;
+    private final HashMap<Integer, Task> tasks; //задачи
+    private final HashMap<Integer, Epic> epics; //эпики
+    private final HashMap<Integer, Subtask> subtasks;
+
 
     private final InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 
@@ -23,7 +23,6 @@ public class InMemoryTaskManager implements TaskManager {
         this.tasks = new HashMap<>();
         this.epics = new HashMap<>();
         this.subtasks = new HashMap<>();
-        //this.historyManager = historyManager;
     }
 
     //Генерирует уникальный ID
@@ -344,7 +343,6 @@ public class InMemoryTaskManager implements TaskManager {
         LocalDateTime endTime = task.getDateEnd();
 
         if (startTime == null || endTime == null) {
-            //throw new ManagerSaveException("Эта задача не участвует в планировании");
             return;
         }
 
