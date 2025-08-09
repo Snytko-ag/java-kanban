@@ -37,7 +37,7 @@ public class Epic  extends Task {
             ", status=" + status +
             ", dateStart=" + dateStart +
             ", duration=" + duration +
-            "} " ;
+            "} ";
     }
 
 
