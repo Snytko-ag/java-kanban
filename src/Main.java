@@ -1,3 +1,7 @@
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import tracker.Adapter.DurationAdapter;
+import tracker.Adapter.LocalDateTimeAdapter;
 import tracker.model.Epic;
 import tracker.model.Subtask;
 import tracker.model.Task;
@@ -22,7 +26,12 @@ public class Main {
         Task task1 = new Task("задача1", "собрать коробки", LocalDateTime.parse("20.07.2025 00:00", dateTimeFormatter), Duration.ofMinutes(100L));
         Task task2 = new Task("задача2", "собрать книги",  LocalDateTime.parse("20.07.2026 01:00", dateTimeFormatter), Duration.ofMinutes(100L));
 
-
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .create();
+        System.out.println(gson.toJson(task1));
+        System.out.println(gson.toJson(task2));
 
         Epic epic1 = new Epic("epic1", "перезд");
         Epic epic2 = new Epic("epic2", "регистрация");
@@ -61,14 +70,14 @@ public class Main {
         System.out.println(manager.getSubtaskByEpic(epic2.getIdTask()));
 
 
-        for (Task task : manager.getTasks()) {
+        /*for (Task task : manager.getTasks()) {
             System.out.println("чтение из файла: " + task);
         }
         System.out.println("id = " + manager.searchTaskById(1).getTypeTask());
         System.out.println(manager.getEpics());
         System.out.println(manager.getSubtask());
 
-
+        */
     }
 }
 

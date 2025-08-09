@@ -6,13 +6,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
-    private  int id;
-    private final String name;
-    private final String description;
-    private StatusTask status;
-    private Duration duration;
-    private LocalDateTime dateStart;
-    private LocalDateTime dateEnd;
+    protected  int id;
+    protected String name;
+    protected String description;
+    protected StatusTask status;
+    protected Duration duration;
+    protected LocalDateTime dateStart;
     public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     public Task(String name, String description) {
@@ -52,7 +51,6 @@ public class Task {
         this.dateStart = dateStart;
         this.duration = duration;
     }
-
 
 
     public int getIdTask() {
