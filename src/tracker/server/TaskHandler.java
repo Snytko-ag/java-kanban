@@ -31,7 +31,8 @@ public class TaskHandler extends BaseHttpHandler {
                         response = gson.toJson(taskManager.searchTaskById(taskId));
                         sendSuccess(exchange, response);
                     } else {
-                        sendNotFound(exchange, "Задача " + taskId + " не найдена");
+                        String result = String.format("Задача %s не найдена", taskId);
+                        sendNotFound(exchange, result);
                     }
                 }
             } catch (NotFoundException e) {
@@ -57,9 +58,11 @@ public class TaskHandler extends BaseHttpHandler {
 
                     if (taskId > 0 && taskManager.searchTaskById(taskId) != null) {
                         taskManager.updateTask(task);
-                        sendSuccessUpdate(exchange, "Задача " + taskId + " успешно обновлена");
+                        String result = String.format("Задача %s успешно обновлена", taskId);
+                        sendSuccessUpdate(exchange, result);
                     } else {
-                        sendNotFound(exchange, "Задача " + taskId + " не найдена");
+                        String result = String.format("Задача %s не найдена", taskId);
+                        sendNotFound(exchange, result);
                     }
                 }
             } catch (NotFoundException e) {
@@ -83,9 +86,11 @@ public class TaskHandler extends BaseHttpHandler {
                     int taskId = Integer.parseInt(urlParts[2]);
                     if (taskId > 0 && taskManager.searchTaskById(taskId) != null) {
                         taskManager.deleteTaskById(taskId);
-                        sendSuccess(httpExchange, "Задача " + taskId + " удалена");
+                        String result = String.format("Задача %s удалена", taskId);
+                        sendSuccess(httpExchange, result);
                     } else {
-                        sendNotFound(httpExchange, "Задача " + taskId + " не найдена");
+                        String result = String.format("Задача %s не найдена", taskId);
+                        sendNotFound(httpExchange, result);
                     }
                 }
             } catch (NotFoundException e) {

@@ -32,7 +32,8 @@ public class EpicHandler extends BaseHttpHandler {
                         response = gson.toJson(taskManager.searchEpicById(taskId));
                         sendSuccess(exchange, response);
                     } else {
-                        sendNotFound(exchange, "Эпик " + taskId + " не найден");
+                        String result = String.format("Эпик %s не найден", taskId);
+                        sendNotFound(exchange, result);
                     }
                 }
             } catch (NotFoundException e) {
@@ -57,9 +58,11 @@ public class EpicHandler extends BaseHttpHandler {
                     int taskId = Integer.parseInt(urlParts[2]);
                     if (taskId > 0 && taskManager.searchEpicById(taskId) != null) {
                         taskManager.updateEpic(epic);
-                        sendSuccessUpdate(exchange, "Эпик " + taskId + " успешно обновлен");
+                        String result = String.format("Эпик %s успешно обновлен", taskId);
+                        sendSuccessUpdate(exchange, result);
                     } else {
-                        sendNotFound(exchange, "Эпик " + taskId + " не найден");
+                        String result = String.format("Эпик %s не найден", taskId);
+                        sendNotFound(exchange, result);
                     }
                 }
             } catch (NotFoundException e) {
@@ -83,9 +86,11 @@ public class EpicHandler extends BaseHttpHandler {
                     int taskId = Integer.parseInt(urlParts[2]);
                     if (taskId > 0 && taskManager.searchEpicById(taskId) != null) {
                         taskManager.deleteEpicById(taskId);
-                        sendSuccess(exchange, "Эпик " + taskId + " удален");
+                        String result = String.format("Эпик %s удален", taskId);
+                        sendSuccess(exchange, result);
                     }  else {
-                    sendNotFound(exchange, "Эпик " + taskId + " не найден");
+                        String result = String.format("Эпик %s не найден", taskId);
+                        sendNotFound(exchange, result);
                     }
                 }
             } catch (NotFoundException e) {

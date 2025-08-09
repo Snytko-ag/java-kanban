@@ -29,7 +29,8 @@ public class SubtaskHandler extends BaseHttpHandler {
                     if (taskId > 0 && taskManager.searchSubtaskById(taskId) != null) {
                         response = gson.toJson(taskManager.searchSubtaskById(taskId));
                     } else {
-                        sendNotFound(exchange, "Подзадача " + taskId + " не найдена");
+                        String result = String.format("Подзадача %s не найдена", taskId);
+                        sendNotFound(exchange, result);
                     }
                 }
                 sendSuccess(exchange, response);
@@ -55,9 +56,11 @@ public class SubtaskHandler extends BaseHttpHandler {
                     int taskId = Integer.parseInt(urlParts[2]);
                     if (taskId > 0 && taskManager.searchSubtaskById(taskId) != null) {
                         taskManager.updateSubtask(subtask);
-                        sendSuccessUpdate(exchange, "Подзадача " + taskId + " успешно обновлена");
+                        String result = String.format("Подзадача %s успешно обновлена", taskId);
+                        sendSuccessUpdate(exchange, result);
                     } else {
-                        sendNotFound(exchange, "Подзадача " + taskId + " не найдена");
+                        String result = String.format("Подзадача %s не найдена", taskId);
+                        sendNotFound(exchange, result);
                     }
                 }
             } catch (NotFoundException e) {
@@ -81,9 +84,11 @@ public class SubtaskHandler extends BaseHttpHandler {
                     int taskId = Integer.parseInt(urlParts[2]);
                     if (taskId > 0 && taskManager.searchSubtaskById(taskId) != null) {
                         taskManager.deleteSubtaskById(taskId);
-                        sendSuccess(exchange, "Подзадача " + taskId + " удалена");
+                        String result = String.format("Подзадача %s удалена", taskId);
+                        sendSuccess(exchange, result);
                     } else {
-                        sendNotFound(exchange, "Подзадача " + taskId + " не найдена");
+                        String result = String.format("Подзадача %s не найдена", taskId);
+                        sendNotFound(exchange, result);
                     }
                 }
             } catch (NotFoundException e) {
